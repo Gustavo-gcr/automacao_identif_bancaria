@@ -27,11 +27,18 @@ if uploaded_file is not None:
             if row["Conta"] not in contas_novas:
                 df.at[index, "Result"] = f"{row['Empresa']}- {row['Conta']} - {row['Descricao']}"
 
-        # Reorganizar as colunas para que "Result" fique com três colunas de distância
+        # Dividir a coluna "Result" em três colunas
+        df[["Result Empresa", "Result Conta", "Result Descrição"]] = (
+            df["Result"]
+            .str.split(" - ", expand=True)
+            .fillna("")  # Substituir valores NaN por strings vazias
+        )
+
+        # Reorganizar as colunas para facilitar a leitura
         colunas_reordenadas = (
             df.columns[:3].tolist()       # Primeiras três colunas
-            + df.columns[3:-1].tolist()  # Colunas intermediárias
-            + ["Result"]  # Coluna "Result" ao final
+            + ["Result Empresa", "Result Conta", "Result Descrição"]  # Novas colunas divididas
+            + df.columns[3:-4].tolist()  # Colunas intermediárias sem "Result"
         )
         df = df[colunas_reordenadas]
 

@@ -15,36 +15,32 @@ if uploaded_file is not None:
     # Verificar se as colunas esperadas estão presentes
     colunas_esperadas = ["Empresa", "Conta", "Descricao", "emp", "cont", "desc"]
     if all(coluna in df.columns for coluna in colunas_esperadas):
-        # Inicializar a coluna Result
-        df["Result"] = ""
+        # Inicializar as colunas de Result
+        df["Result_Emp"] = ""
+        df["Result_Conta"] = ""
+        df["Result_Descricao"] = ""
 
         # Verificar as contas que estão na base, mas não nas novas colunas
-        contas_base = df["Conta"].tolist()
         contas_novas = df["cont"].tolist()
 
         for index, row in df.iterrows():
-            # Se a conta da linha não estiver nas novas colunas, preenchê-la no Result
             if row["Conta"] not in contas_novas:
-                df.at[index, "Result"] = f"{row['Empresa']}- {row['Conta']} - {row['Descricao']}"
+                # Preencher Result_Emp, Result_Conta e Result_Descricao
+                df.at[index, "Result_Emp"] = row["Empresa"]
+                df.at[index, "Result_Conta"] = row["Conta"]
+                df.at[index, "Result_Descricao"] = row["Descricao"]
 
-        # Dividir a coluna "Result" em três colunas
-        df[["Result Empresa", "Result Conta", "Result Descrição"]] = (
-            df["Result"]
-            .str.split(" - ", expand=True)
-            .fillna("")  # Substituir valores NaN por strings vazias
-        )
-
-        # Reorganizar as colunas para facilitar a leitura
+        # Reorganizar as colunas para que os resultados fiquem com três colunas de distância
         colunas_reordenadas = (
-            df.columns[:3].tolist()       # Primeiras três colunas
-            + ["Result Empresa", "Result Conta", "Result Descrição"]  # Novas colunas divididas
-            + df.columns[3:-4].tolist()  # Colunas intermediárias sem "Result"
+            df.columns[:3].tolist()  # Primeiras três colunas
+            + df.columns[3:-3].tolist()  # Colunas intermediárias
+            + ["Result_Emp", "Result_Conta", "Result_Descricao"]  # Colunas de resultado ao final
         )
         df = df[colunas_reordenadas]
 
         # Exibir o DataFrame processado no Streamlit
         st.write("Planilha processada com sucesso!")
-       # st.dataframe(df)
+        st.dataframe(df)
 
         # Permitir download do arquivo processado
         output = BytesIO()

@@ -40,7 +40,7 @@ if uploaded_file is not None:
 
         # Exibir o DataFrame processado no Streamlit
         st.write("Planilha processada com sucesso!")
-        st.dataframe(df)
+        #st.dataframe(df)
 
         # Permitir download do arquivo processado
         output = BytesIO()

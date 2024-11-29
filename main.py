@@ -13,7 +13,7 @@ if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
 
     # Verificar se as colunas esperadas estão presentes
-    colunas_esperadas = ["Empresa", "Conta", "Descricao", "emp", "cont", "desc"]
+    colunas_esperadas = ["Empresa", "Conta", "Descricao", "emp", "cont", "descr"]
     if all(coluna in df.columns for coluna in colunas_esperadas):
         # Inicializar as colunas de Result
         df["Result_Emp"] = ""
